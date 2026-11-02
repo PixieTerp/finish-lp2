@@ -115,8 +115,10 @@
 
     <div class="card">
       <h2>2. Count your grades in Canvas 🔍</h2>
-      <div class="callout">Open <b>Canvas → Grades</b> in another tab. Count <b>by hand</b> how many assignments have each grade below.<br>
-        <b>Skip quizzes that have no teacher comment.</b> Click each grade to <b>read Ms. K's comment</b>.</div>
+      <div class="callout">Open <b>Canvas → Grades</b> in another tab. Count <b>by hand</b> how many have each grade below.<br>
+        ✅ Count <b>ASSIGNMENTS and TESTS only</b>.<br>
+        ❌ Do <b>NOT</b> count Vocab quizzes or Session Activities.<br>
+        Click each grade to <b>read Ms. K's comment</b>.</div>
       <div class="codes">
         <div class="code"><b>0.01</b><span>missing / nothing to grade</span><input type="number" min="0" step="1" data-code="0.01" inputmode="numeric" placeholder="#"></div>
         <div class="code"><b>1</b><span>wrong / can't open</span><input type="number" min="0" step="1" data-code="1" inputmode="numeric" placeholder="#"></div>
@@ -128,6 +130,10 @@
       <div class="hint">Type 0 if you have none.</div>
       <div class="total">Total to fix &amp; resubmit: <span id="tot">0</span></div>
       <div class="err" id="codeErr"></div>
+      <label class="f" for="names">✏️ Write down the NAME of every assignment/test you counted</label>
+      <textarea id="names" rows="5" placeholder="Example:&#10;M4L3 Assignment: Domain and Range – 2&#10;Module 3 Test – 1.04" style="width:100%;font-size:1.05rem;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:#fffaf4;font-family:inherit"></textarea>
+      <div class="hint">One per line, with its grade. Copy the name exactly from Canvas.</div>
+      <div class="err" id="namesErr"></div>
     </div>
 
     <div class="card">
@@ -236,13 +242,18 @@ $("toQuiz").onclick = () => {
   });
   if (bad) { $("codeErr").textContent = "Fill in every box (type 0 if you have none)."; ok=false; }
   else $("codeErr").textContent = "";
+  const totalCount = Object.values(counts).reduce((a,b)=>a+(b||0),0);
+  const nameLines = $("names").value.split("\n").map(x=>x.trim()).filter(x=>x.length>=3);
+  if (!bad && totalCount > 0 && nameLines.length < totalCount) {
+    $("namesErr").textContent = `You counted ${totalCount}, so write down ${totalCount} name${totalCount>1?"s":""} (one per line). You have ${nameLines.length}.`; ok=false;
+  } else $("namesErr").textContent = "";
 
   if (!$("c1").checked || !$("c2").checked) { $("chkErr").textContent = "Check both boxes to continue."; ok=false; }
   else $("chkErr").textContent = "";
 
   if (!ok) { const e=[...document.querySelectorAll(".err")].find(x=>x.textContent); if(e) e.scrollIntoView({behavior:"smooth",block:"center"}); return; }
 
-  Object.assign(student,{name, cls:$("cls").value, counts, total:Object.values(counts).reduce((a,b)=>a+b,0)});
+  Object.assign(student,{name, cls:$("cls").value, counts, names: $("names").value.trim(), total:Object.values(counts).reduce((a,b)=>a+b,0)});
   $("who").textContent = `👋 ${name} · ${$("cls").selectedOptions[0].text}`;
   $("who").classList.remove("hide");
   startQuiz();
@@ -357,7 +368,7 @@ function send(result){
     version: VERSION, name: student.name, cls: student.cls,
     c001: student.counts["0.01"], c1: student.counts["1"], c101: student.counts["1.01"],
     c104: student.counts["1.04"], c2: student.counts["2"], c3: student.counts["3"],
-    total: student.total, readComments: true,
+    total: student.total, names: student.names, readComments: true,
     attempt: result.attempt, score: result.score, wrong: result.wrong, finished: result.finished,
     minutes: Math.round((new Date()-startTime)/60000)
   };
