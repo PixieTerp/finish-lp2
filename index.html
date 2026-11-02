@@ -89,7 +89,7 @@
 
   <!-- ================= PAGE 1 ================= -->
   <section id="p1">
-    <div class="goal"><div class="num">60%+</div><div><b>That's what you need to PASS.</b><br>Fixing your 0.01s, 1s, 2s and 3s is the fastest way to get there.</div></div>
+    <div class="goal"><div class="num">60%+</div><div><b>That's what you need to PASS.</b><br>Fixing your 1s, 2s and 3s is the fastest way to get there.</div></div>
     <div class="callout" style="font-size:1.05rem;margin:0 0 16px;background:#fff">📌 <b>This quiz counts as your checkpoint (Mandatory Attendance).</b><br>Already done with your checkpoints? No worries 😉 — it still goes into your grade!</div>
     <div class="card">
       <h2>1. Who are you?</h2>
@@ -128,16 +128,15 @@
         <div class="code"><b>1</b><span>wrong / can't open</span><input type="number" min="0" step="1" data-code="1" inputmode="numeric" placeholder="#"></div>
         <div class="code"><b>2</b><span>shared as Viewer, not Editor</span><input type="number" min="0" step="1" data-code="2" inputmode="numeric" placeholder="#"></div>
         <div class="code"><b>3</b><span>answers only, no work</span><input type="number" min="0" step="1" data-code="3" inputmode="numeric" placeholder="#"></div>
-        <div class="code"><b>0.01</b><span>missing / nothing to grade</span><input type="number" min="0" step="1" data-code="0.01" inputmode="numeric" placeholder="#"></div>
         <div class="code"><b>1.01</b><span>not your own work</span><input type="number" min="0" step="1" data-code="1.01" inputmode="numeric" placeholder="#"></div>
         <div class="code"><b>1.04</b><span>wrong format</span><input type="number" min="0" step="1" data-code="1.04" inputmode="numeric" placeholder="#"></div>
       </div>
       <div class="hint">Type 0 if you have none.</div>
       <div class="total">Total to fix &amp; resubmit: <span id="tot">0</span></div>
       <div class="err" id="codeErr"></div>
-      <label class="f" for="names">✏️ Write down the NAME of every assignment/test you counted</label>
+      <label class="f" for="names">✏️ Write down the NAMES of the assignments/tests you counted</label>
       <textarea id="names" rows="5" placeholder="Example:&#10;M4L3 Assignment: Domain and Range – 2&#10;Module 3 Test – 1.04" style="width:100%;font-size:1.05rem;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:#fffaf4;font-family:inherit"></textarea>
-      <div class="hint">One per line, with its grade. Copy the name exactly from Canvas.</div>
+      <div class="hint">Copy the names from Canvas. Nothing to fix? Write a short explanation why (at least 10 letters).</div>
       <div class="err" id="namesErr"></div>
     </div>
 
@@ -185,7 +184,7 @@
       <p id="saveMsg" class="hint"></p>
       <div id="emailBox" class="hide" style="text-align:left;margin-top:18px;border-top:3px dashed var(--line);padding-top:16px">
         <h2 style="text-align:center">📧 How do I remember it?</h2>
-        <p class="center" style="margin:0 0 6px">Email your list to <b>yourself</b> + <b>your coach</b> (CC).</p>
+        <p class="center" style="margin:0 0 6px">Email your list to <b>yourself</b> + CC <b>your coach</b> and <b>Ms. Strigina</b>.</p>
         <label class="f" for="myEmail">Your school email</label>
         <input id="myEmail" type="text" inputmode="email" placeholder="first.last@thrivepointnevada.com">
         <label class="f" for="coach">Your coach</label>
@@ -206,8 +205,8 @@
         <textarea id="myNotes" rows="4" placeholder="Example: Fix Domain and Range on Tuesday, come to session Wednesday, take the final Thursday." style="width:100%;font-size:1.05rem;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:#fffaf4;font-family:inherit"></textarea>
         <div class="err" id="mailErr"></div>
         <div class="center" style="margin-top:12px">
-          <button id="gmailBtn" type="button">Open Gmail ✉️</button>
-          <div class="hint" style="margin-top:8px">Then just press <b>Send</b> in Gmail. Not opening? <a id="mailtoLink" href="#">Try this link</a>.</div>
+          <button id="gmailBtn" type="button">Send it to my school email ✉️</button>
+          <div class="hint" id="mailMsg" style="margin-top:8px">It goes to your <b>school</b> email — check it in a few minutes.</div>
         </div>
       </div>
     </div>
@@ -279,9 +278,9 @@ $("toQuiz").onclick = () => {
   if (bad) { $("codeErr").textContent = "Fill in every box (type 0 if you have none)."; ok=false; }
   else $("codeErr").textContent = "";
   const totalCount = Object.values(counts).reduce((a,b)=>a+(b||0),0);
-  const nameLines = $("names").value.split("\n").map(x=>x.trim()).filter(x=>x.length>=3);
-  if (!bad && totalCount > 0 && nameLines.length < totalCount) {
-    $("namesErr").textContent = `You counted ${totalCount}, so write down ${totalCount} name${totalCount>1?"s":""} (one per line). You have ${nameLines.length}.`; ok=false;
+  const namesText = $("names").value.replace(/\s+/g," ").trim();
+  if (namesText.length < 10) {
+    $("namesErr").textContent = totalCount > 0 ? "Write the names of the assignments you need to fix (at least 10 letters)." : "Nothing to fix? Write a short explanation (at least 10 letters)."; ok=false;
   } else $("namesErr").textContent = "";
 
   if (!$("c1").checked || !$("c2").checked) { $("chkErr").textContent = "Check both boxes to continue."; ok=false; }
@@ -417,7 +416,6 @@ Class: ${$("cls").selectedOptions[0].text}
 Goal: PASS with 60%+
 
 MY GRADES TO FIX (assignments & tests only):
-  0.01 (missing): ${c["0.01"]}
   1 (wrong / can't open): ${c["1"]}
   1.01 (not my own work): ${c["1.01"]}
   1.04 (wrong format): ${c["1.04"]}
@@ -436,20 +434,19 @@ HOW TO RESUBMIT: fix the SAME doc → Canvas → New Attempt → submit the SAME
 ⚠️ FINAL EXAM opens Wednesday at midnight – don't forget to take it!
 
 – ${student.name}`;
-  return {me, cc: coach === "none" ? "" : coach, subject, body};
+  const ms = "katya.strigina@thrivepointnevada.com";
+  return {me, cc: coach === "none" ? ms : coach + "," + ms, subject, body};
 }
 $("gmailBtn").onclick = ()=>{
   const m = buildMail(); if (!m) return;
-  const url = "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(m.me) +
-    (m.cc ? "&cc=" + encodeURIComponent(m.cc) : "") +
-    "&su=" + encodeURIComponent(m.subject) + "&body=" + encodeURIComponent(m.body);
-  window.open(url, "_blank");
-};
-$("mailtoLink").onclick = (e)=>{
-  e.preventDefault();
-  const m = buildMail(); if (!m) return;
-  location.href = "mailto:" + encodeURIComponent(m.me) + "?" + (m.cc ? "cc=" + encodeURIComponent(m.cc) + "&" : "") +
-    "subject=" + encodeURIComponent(m.subject) + "&body=" + encodeURIComponent(m.body);
+  if (!SHEET_URL || SHEET_URL.startsWith("PASTE")) { $("mailErr").textContent = "Not connected yet — tell Ms. K."; return; }
+  $("gmailBtn").disabled = true; $("gmailBtn").textContent = "Sending…";
+  fetch(SHEET_URL, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body: JSON.stringify({type:"email", to:m.me, coach:$("coach").value, subject:m.subject, body:m.body,
+      name:student.name, cls:student.cls, notes:$("myNotes").value.trim()})})
+    .then(()=>{ $("gmailBtn").textContent = "✅ Sent!";
+      $("mailMsg").innerHTML = `Sent to <b>${m.me}</b>${$("coach").value!=="none" ? " + your coach" : ""} + Ms. Strigina. Check your school email!`; })
+    .catch(()=>{ $("gmailBtn").disabled=false; $("gmailBtn").textContent="Try again ✉️"; $("mailErr").textContent="Couldn't send — check your internet and try again."; });
 };
 
 /* ---------- Save to Google Sheet ---------- */
@@ -457,7 +454,7 @@ function send(result){
   if (!SHEET_URL || SHEET_URL.startsWith("PASTE")) { $("saveMsg").textContent = "(Not connected to a sheet yet.)"; return; }
   const payload = {
     version: VERSION, name: student.name, cls: student.cls,
-    c001: student.counts["0.01"], c1: student.counts["1"], c101: student.counts["1.01"],
+    c001: "", c1: student.counts["1"], c101: student.counts["1.01"],
     c104: student.counts["1.04"], c2: student.counts["2"], c3: student.counts["3"],
     total: student.total, names: student.names, readComments: true,
     attempt: result.attempt, score: result.score, wrong: result.wrong, finished: result.finished,
