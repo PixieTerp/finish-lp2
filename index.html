@@ -129,13 +129,12 @@
         <div class="code"><b>2</b><span>shared as Viewer, not Editor</span><input type="number" min="0" step="1" data-code="2" inputmode="numeric" placeholder="#"></div>
         <div class="code"><b>3</b><span>answers only, no work</span><input type="number" min="0" step="1" data-code="3" inputmode="numeric" placeholder="#"></div>
         <div class="code"><b>1.01</b><span>not your own work</span><input type="number" min="0" step="1" data-code="1.01" inputmode="numeric" placeholder="#"></div>
-        <div class="code"><b>1.04</b><span>wrong format</span><input type="number" min="0" step="1" data-code="1.04" inputmode="numeric" placeholder="#"></div>
       </div>
       <div class="hint">Type 0 if you have none.</div>
       <div class="total">Total to fix &amp; resubmit: <span id="tot">0</span></div>
       <div class="err" id="codeErr"></div>
       <label class="f" for="names">✏️ Write down the NAMES of the assignments/tests you counted</label>
-      <textarea id="names" rows="5" placeholder="Example:&#10;M4L3 Assignment: Domain and Range – 2&#10;Module 3 Test – 1.04" style="width:100%;font-size:1.05rem;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:#fffaf4;font-family:inherit"></textarea>
+      <textarea id="names" rows="5" placeholder="Example:&#10;M4L3 Assignment: Domain and Range – 2&#10;Module 3 Test – 1" style="width:100%;font-size:1.05rem;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:#fffaf4;font-family:inherit"></textarea>
       <div class="hint">Copy the names from Canvas. Nothing to fix? Write a short explanation why (at least 10 letters).</div>
       <div class="err" id="namesErr"></div>
     </div>
@@ -225,7 +224,7 @@ const QUESTIONS = [
  {q:"Which sharing setting must your Google Doc have before you submit the link?", a:["Anyone with the link — Editor","Restricted","Anyone with the link — Viewer","Anyone with the link — Commenter"], c:[0]},
  {q:"How do you submit a Google Doc in Canvas?", a:["Copy the share link and paste it into the Website URL submission","Upload a screenshot of the doc","Email the doc to Ms. K","Print it and bring it to session"], c:[0]},
  {q:"You did your work on paper. Which is the correct way to submit it?", a:["Write your name on each page, take a clear photo of each page, and upload the original photo file to Canvas (or link the file from your Drive)","Scan it into a PDF","Take a screenshot of the photo","Paste the photos into the Google Doc only"], c:[0]},
- {q:"Which of these will be graded 1.04 (incorrect format)? Select ALL that apply.", a:["A PDF","A screenshot of your work","A Microsoft Word file","A photo pasted into the Google Doc without the original image file","A Google Doc link shared as Anyone with the link — Editor"], c:[0,1,2,3], multi:true},
+ {q:"Which of these is an INCORRECT format? (It can be graded 1 or 1.04.) Select ALL that apply.", a:["A PDF","A screenshot of your work","A Microsoft Word file","A photo pasted into the Google Doc without the original image file","A Google Doc link shared as Anyone with the link — Editor"], c:[0,1,2,3], multi:true},
  {q:"What does a grade of 1.01 mean?", a:["It isn't your own work — AI-generated, copy-pasted from the internet, or copied from another student","The link is restricted","Final answers only, no work shown","You submitted work from another class"], c:[0]},
  {q:"What does a grade of 2 mean?", a:["Your Google Doc is shared as Viewer or Commenter instead of Editor","Your work is AI-generated","You sent a PDF","You submitted the wrong assignment"], c:[0]},
  {q:"What does a grade of 3 mean?", a:["Final answers only, no work shown — it counts as not attempted","Your doc is shared as Viewer","You submitted a screenshot","Your work was perfect"], c:[0]},
@@ -418,7 +417,6 @@ Goal: PASS with 60%+
 MY GRADES TO FIX (assignments & tests only):
   1 (wrong / can't open): ${c["1"]}
   1.01 (not my own work): ${c["1.01"]}
-  1.04 (wrong format): ${c["1.04"]}
   2 (Viewer, not Editor): ${c["2"]}
   3 (answers only, no work): ${c["3"]}
   TOTAL TO FIX: ${student.total}
@@ -455,7 +453,7 @@ function send(result){
   const payload = {
     version: VERSION, name: student.name, cls: student.cls,
     c001: "", c1: student.counts["1"], c101: student.counts["1.01"],
-    c104: student.counts["1.04"], c2: student.counts["2"], c3: student.counts["3"],
+    c104: "", c2: student.counts["2"], c3: student.counts["3"],
     total: student.total, names: student.names, readComments: true,
     attempt: result.attempt, score: result.score, wrong: result.wrong, finished: result.finished,
     minutes: Math.round((new Date()-startTime)/60000)
