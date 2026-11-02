@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Last week of LP2!</title>
+<style>
+  /* ====== PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL IN THE SCRIPT BELOW (SHEET_URL) ====== */
+  :root{
+    --bg:#FFE3C2; --card:#ffffff; --ink:#2b1d0e; --muted:#7a5a3a;
+    --orange:#F2711C; --orange-dk:#c4560f; --blue:#1a73c7;
+    --good:#1f9d55; --bad:#d64545; --line:#f3c99a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Arial,Helvetica,sans-serif;font-size:19px;line-height:1.45}
+  .wrap{max-width:760px;margin:0 auto;padding:22px 16px 60px}
+  h1{font-size:2.2rem;margin:4px 0 4px;text-align:center;color:var(--orange-dk)}
+  .sub{text-align:center;color:var(--muted);margin:0 0 18px}
+  .card{background:var(--card);border-radius:18px;padding:22px;box-shadow:0 4px 0 var(--line);margin-bottom:16px}
+  h2{margin:0 0 10px;font-size:1.35rem}
+  label.f{display:block;font-weight:700;margin:14px 0 6px}
+  input[type=text],input[type=number],select{width:100%;font-size:1.1rem;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:#fffaf4}
+  input:focus,select:focus{outline:none;border-color:var(--orange)}
+  .hint{font-size:.9rem;color:var(--muted);margin-top:4px}
+  .pt{display:inline-block;background:var(--orange);color:#fff;border-radius:999px;padding:2px 10px;font-size:.8rem;margin-left:6px;vertical-align:middle}
+  .err{color:var(--bad);font-weight:700;font-size:.95rem;margin-top:6px;min-height:1.2em}
+  .codes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+  .code{border:2px solid var(--line);border-radius:14px;padding:10px 12px;background:#fffaf4}
+  .code b{font-size:1.3rem;color:var(--orange-dk)}
+  .code span{display:block;font-size:.85rem;color:var(--muted);margin:2px 0 6px}
+  .code input{padding:8px 10px}
+  .total{margin-top:12px;font-weight:700;font-size:1.1rem}
+  .check{display:flex;gap:10px;align-items:flex-start;margin:10px 0;font-weight:600}
+  .check input{width:24px;height:24px;margin-top:2px;flex:none}
+  .callout{background:#fff4e6;border-left:6px solid var(--orange);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:.95rem}
+  button{font-size:1.15rem;font-weight:800;border:0;border-radius:14px;padding:14px 22px;cursor:pointer;background:var(--orange);color:#fff;box-shadow:0 4px 0 var(--orange-dk)}
+  button:active{transform:translateY(2px);box-shadow:0 2px 0 var(--orange-dk)}
+  button.ghost{background:#fff;color:var(--orange-dk);border:2px solid var(--orange);box-shadow:none}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .row{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:18px;flex-wrap:wrap}
+  .bar{height:12px;background:#ffe0bd;border-radius:999px;overflow:hidden;margin:6px 0 14px}
+  .bar i{display:block;height:100%;background:var(--orange);width:0;transition:width .25s}
+  .qnum{color:var(--muted);font-weight:700;font-size:.95rem}
+  .qtext{font-size:1.3rem;font-weight:800;margin:6px 0 14px}
+  .opt{display:flex;gap:12px;align-items:flex-start;border:2px solid var(--line);border-radius:14px;padding:12px 14px;margin:8px 0;cursor:pointer;background:#fffaf4}
+  .opt input{width:22px;height:22px;flex:none;margin-top:2px}
+  .opt.sel{border-color:var(--orange);background:#fff0de}
+  .dots{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+  .dot{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:#fff;font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);padding:0;box-shadow:none}
+  .dot.done{background:#ffe0bd}
+  .dot.cur{border-color:var(--orange-dk)}
+  .dot.ok{background:var(--good);color:#fff;border-color:var(--good)}
+  .dot.no{background:var(--bad);color:#fff;border-color:var(--bad)}
+  .big{font-size:3rem;font-weight:900;text-align:center;margin:6px 0}
+  .center{text-align:center}
+  .wrongnote{background:#fdecec;border-left:6px solid var(--bad);border-radius:10px;padding:8px 12px;margin-bottom:10px;font-weight:700;color:var(--bad)}
+  .hide{display:none}
+  .who{font-size:.95rem;color:var(--muted);text-align:center;margin-bottom:10px}
+  @media (max-width:520px){.codes{grid-template-columns:1fr}h1{font-size:1.8rem}body{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎃 Last week of LP2! 🎃</h1>
+  <p class="sub">Check your grades → fix your work → ace the quiz (100% to finish)</p>
+  <div id="who" class="who hide"></div>
+
+  <!-- ================= PAGE 1 ================= -->
+  <section id="p1">
+    <div class="callout" style="font-size:1.05rem;margin:0 0 16px">📌 <b>This quiz counts as your checkpoint (Mandatory Attendance).</b><br>Already done with your checkpoints? No worries 😉 — it still goes into your grade!</div>
+    <div class="card">
+      <h2>1. Who are you?</h2>
+      <label class="f" for="name">Your FIRST and LAST name — exactly like in Canvas</label>
+      <input id="name" type="text" placeholder="First Last" autocomplete="name">
+      <div class="hint">Example: <b>Maria Lopez</b> (not "maria", not "ML", not a nickname)</div>
+      <div class="err" id="nameErr"></div>
+
+      <label class="f" for="cls">Pick your class <span class="pt">⭐ 1 point</span></label>
+      <select id="cls">
+        <option value="">— choose your class —</option>
+        <option>PA-S1</option><option>PA-S2</option>
+        <option>A1-S1</option><option>A1-S2</option>
+        <option>G-S1</option><option>G-S2</option>
+        <option>A2-S1</option>
+        <option>CS</option>
+      </select>
+      <div class="hint">Picking the right class is worth a point. Wrong class = no point!</div>
+      <div class="err" id="clsErr"></div>
+    </div>
+
+    <div class="card">
+      <h2>2. Count your grades in Canvas 🔍</h2>
+      <div class="callout">Open <b>Canvas → Grades</b> in another tab. Count <b>by hand</b> how many assignments have each grade below.<br>
+        <b>Skip quizzes that have no teacher comment.</b> Click each grade to <b>read Ms. K's comment</b>.</div>
+      <div class="codes">
+        <div class="code"><b>0.01</b><span>missing / nothing to grade</span><input type="number" min="0" step="1" data-code="0.01" inputmode="numeric" placeholder="#"></div>
+        <div class="code"><b>1</b><span>wrong / can't open</span><input type="number" min="0" step="1" data-code="1" inputmode="numeric" placeholder="#"></div>
+        <div class="code"><b>1.01</b><span>not your own work</span><input type="number" min="0" step="1" data-code="1.01" inputmode="numeric" placeholder="#"></div>
+        <div class="code"><b>1.04</b><span>wrong format</span><input type="number" min="0" step="1" data-code="1.04" inputmode="numeric" placeholder="#"></div>
+        <div class="code"><b>2</b><span>shared as Viewer, not Editor</span><input type="number" min="0" step="1" data-code="2" inputmode="numeric" placeholder="#"></div>
+        <div class="code"><b>3</b><span>answers only, no work</span><input type="number" min="0" step="1" data-code="3" inputmode="numeric" placeholder="#"></div>
+      </div>
+      <div class="hint">Type 0 if you have none.</div>
+      <div class="total">Total to fix &amp; resubmit: <span id="tot">0</span></div>
+      <div class="err" id="codeErr"></div>
+    </div>
+
+    <div class="card">
+      <h2>3. Promise ✋</h2>
+      <label class="check"><input type="checkbox" id="c1"> I clicked every one and read Ms. K's comments.</label>
+      <label class="check"><input type="checkbox" id="c2"> I will fix ALL of these and resubmit them (New Attempt → same link).</label>
+      <div class="err" id="chkErr"></div>
+      <div class="row"><span></span><button id="toQuiz">Next: Questions ➜</button></div>
+    </div>
+  </section>
+
+  <!-- ================= PAGE 2 ================= -->
+  <section id="p2" class="hide">
+    <div class="card">
+      <div class="row" style="margin-top:0"><span class="qnum" id="qnum"></span><span class="qnum" id="attemptLbl"></span></div>
+      <div class="bar"><i id="barFill"></i></div>
+      <div class="dots" id="dots"></div>
+      <div id="wrongNote" class="wrongnote hide">❌ Not quite — try this one again.</div>
+      <div class="qtext" id="qtext"></div>
+      <div id="opts"></div>
+      <div class="hint" id="multiHint"></div>
+      <div class="row">
+        <button class="ghost" id="prev">⬅ Back</button>
+        <button id="next">Next ➜</button>
+        <button id="check" class="hide">Check my answers ✅</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RESULT ================= -->
+  <section id="p3" class="hide">
+    <div class="card center">
+      <div class="big" id="score"></div>
+      <p id="resultMsg"></p>
+      <button id="retry" class="hide">Fix the red ones 🔁</button>
+      <p id="saveMsg" class="hint"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ===== 1) Paste your Apps Script web app URL here ===== */
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxaR8NdhKgu0FBzopRAurTkbuOzv3hHMlfsqChxWi6MDKLN6E2W1EixvdfqkiQUgII4Zg/exec";
+const VERSION = "LP2-last-week";
+
+const QUESTIONS = [
+ {q:"Before you can submit ANY other work in this course, what must you do first?", a:["Complete the Course Commitment and score 100% on this quiz","Join two Google Classrooms","Submit Weekly Vocab only","Nothing — you can start submitting right away"], c:[0]},
+ {q:"In what format must your typed assignments be done to receive credit?", a:["In your own copy of the Google Doc","A Microsoft Word file","A PDF","Any editor is fine as long as the answers are correct"], c:[0]},
+ {q:"How do you get your own copy of an assignment?", a:["Click the blue Open the Assignment button while signed in to your school Google account — it makes a copy for you","Edit Ms. K's original document directly","Download it as a PDF","Take a screenshot of the assignment"], c:[0]},
+ {q:"Which sharing setting must your Google Doc have before you submit the link?", a:["Anyone with the link — Editor","Restricted","Anyone with the link — Viewer","Anyone with the link — Commenter"], c:[0]},
+ {q:"How do you submit a Google Doc in Canvas?", a:["Copy the share link and paste it into the Website URL submission","Upload a screenshot of the doc","Email the doc to Ms. K","Print it and bring it to session"], c:[0]},
+ {q:"You did your work on paper. Which is the correct way to submit it?", a:["Write your name on each page, take a clear photo of each page, and upload the original photo file to Canvas (or link the file from your Drive)","Scan it into a PDF","Take a screenshot of the photo","Paste the photos into the Google Doc only"], c:[0]},
+ {q:"Which of these will be graded 1.04 (incorrect format)? Select ALL that apply.", a:["A PDF","A screenshot of your work","A Microsoft Word file","A photo pasted into the Google Doc without the original image file","A Google Doc link shared as Anyone with the link — Editor"], c:[0,1,2,3], multi:true},
+ {q:"What does a grade of 1.01 mean?", a:["It isn't your own work — AI-generated, copy-pasted from the internet, or copied from another student","The link is restricted","Final answers only, no work shown","You submitted work from another class"], c:[0]},
+ {q:"What does a grade of 2 mean?", a:["Your Google Doc is shared as Viewer or Commenter instead of Editor","Your work is AI-generated","You sent a PDF","You submitted the wrong assignment"], c:[0]},
+ {q:"What does a grade of 3 mean?", a:["Final answers only, no work shown — it counts as not attempted","Your doc is shared as Viewer","You submitted a screenshot","Your work was perfect"], c:[0]},
+ {q:"You used Desmos or a calculator to solve a problem. What must you do?", a:["Paste the link (or a screenshot of your setup) into your document, or it counts as no work shown","Nothing — just write the final answer","Email Ms. K the result","Calculators are not allowed"], c:[0]},
+ {q:"You got a 1, 2, or 3 and fixed your work. How do you resubmit?", a:["Go to the assignment, click New Attempt, and submit the SAME original link","Make a brand-new copy and submit a new link","Send the doc by email","You cannot resubmit"], c:[0]},
+ {q:"What are the two checkpoints in this course?", a:["They are Mandatory Attendance — you must show up, even if you are not in any session","Optional practice quizzes","Two Weekly Vocab assignments","Extra-credit videos"], c:[0]},
+ {q:"Which Google Meet link do you use for sessions, meetings, and appointments?", a:["The same one link for all of them (meet.google.com/noi-qdvd-spp)","A different link for each one","A Google Classroom link","There is no Meet link — only email"], c:[0]}
+];
+
+const $ = id => document.getElementById(id);
+const student = {};
+let order = [];          // shuffled answer order per question
+let answers = [];        // selected original indexes per question
+let status = [];         // null | true | false
+let cur = 0, attempt = 1;
+const startTime = new Date();
+
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function titleCase(s){ return s.trim().replace(/\s+/g," ").toLowerCase().replace(/(^|[\s\-'])([a-zà-ÿ])/g,(m,p,c)=>p+c.toUpperCase()); }
+
+/* ---------- Page 1 ---------- */
+const codeInputs = [...document.querySelectorAll("[data-code]")];
+codeInputs.forEach(i=>i.addEventListener("input",()=>{
+  $("tot").textContent = codeInputs.reduce((s,x)=>s+(parseInt(x.value)||0),0);
+}));
+$("name").addEventListener("blur",()=>{ if($("name").value.trim()) $("name").value = titleCase($("name").value); });
+
+$("toQuiz").onclick = () => {
+  let ok = true;
+  const name = titleCase($("name").value);
+  $("name").value = name;
+  const parts = name.split(" ");
+  if (parts.length < 2 || parts.some(p => p.replace(/[^A-Za-zÀ-ÿ]/g,"").length < 2) || /\d/.test(name)) {
+    $("nameErr").textContent = "Type your FIRST and LAST name, like in Canvas (example: Maria Lopez).";
+    ok = false;
+  } else $("nameErr").textContent = "";
+
+  if (!$("cls").value) { $("clsErr").textContent = "Pick your class — it's worth a point!"; ok=false; }
+  else $("clsErr").textContent = "";
+
+  const counts = {};
+  let bad = false;
+  codeInputs.forEach(i=>{
+    const v = i.value.trim();
+    if (v === "" || !/^\d+$/.test(v)) bad = true;
+    counts[i.dataset.code] = parseInt(v);
+  });
+  if (bad) { $("codeErr").textContent = "Fill in every box (type 0 if you have none)."; ok=false; }
+  else $("codeErr").textContent = "";
+
+  if (!$("c1").checked || !$("c2").checked) { $("chkErr").textContent = "Check both boxes to continue."; ok=false; }
+  else $("chkErr").textContent = "";
+
+  if (!ok) { const e=[...document.querySelectorAll(".err")].find(x=>x.textContent); if(e) e.scrollIntoView({behavior:"smooth",block:"center"}); return; }
+
+  Object.assign(student,{name, cls:$("cls").value, counts, total:Object.values(counts).reduce((a,b)=>a+b,0)});
+  $("who").textContent = `👋 ${name} · ${student.cls}`;
+  $("who").classList.remove("hide");
+  startQuiz();
+};
+
+/* ---------- Page 2 ---------- */
+function startQuiz(){
+  order = QUESTIONS.map(q => shuffle(q.a.map((_,i)=>i)));
+  answers = QUESTIONS.map(()=>[]);
+  status = QUESTIONS.map(()=>null);
+  cur = 0;
+  $("p1").classList.add("hide"); $("p2").classList.remove("hide");
+  window.scrollTo(0,0);
+  render();
+}
+
+function render(){
+  const q = QUESTIONS[cur];
+  $("qnum").textContent = `Question ${cur+1} of ${QUESTIONS.length}`;
+  $("attemptLbl").textContent = `Try #${attempt}`;
+  $("barFill").style.width = (answers.filter(a=>a.length).length / QUESTIONS.length * 100) + "%";
+  $("qtext").textContent = q.q;
+  $("multiHint").textContent = q.multi ? "👉 More than one answer can be right. Check ALL that apply." : "";
+  $("wrongNote").classList.toggle("hide", status[cur] !== false);
+
+  const box = $("opts"); box.innerHTML = "";
+  const locked = status[cur] === true;
+  order[cur].forEach(orig=>{
+    const lab = document.createElement("label");
+    lab.className = "opt" + (answers[cur].includes(orig) ? " sel" : "");
+    const inp = document.createElement("input");
+    inp.type = q.multi ? "checkbox" : "radio"; inp.name = "q"+cur;
+    inp.checked = answers[cur].includes(orig);
+    inp.disabled = locked;
+    inp.onchange = () => {
+      if (q.multi) answers[cur] = inp.checked ? [...answers[cur], orig] : answers[cur].filter(x=>x!==orig);
+      else answers[cur] = [orig];
+      if (status[cur] === false) status[cur] = null;   // they changed a wrong answer
+      render();
+    };
+    const span = document.createElement("span"); span.textContent = q.a[orig];
+    lab.append(inp, span); box.append(lab);
+  });
+  if (locked) { const n=document.createElement("div"); n.className="hint"; n.textContent="✅ You got this one right already."; box.append(n); }
+
+  const dots = $("dots"); dots.innerHTML = "";
+  QUESTIONS.forEach((_,i)=>{
+    const d = document.createElement("button");
+    d.className = "dot" + (answers[i].length?" done":"") + (status[i]===true?" ok":"") + (status[i]===false?" no":"") + (i===cur?" cur":"");
+    d.textContent = i+1; d.type="button";
+    d.onclick = ()=>{ cur=i; render(); };
+    dots.append(d);
+  });
+
+  $("prev").disabled = cur === 0;
+  const last = cur === QUESTIONS.length-1;
+  $("next").classList.toggle("hide", last);
+  $("check").classList.toggle("hide", !last);
+  $("next").disabled = !answers[cur].length;
+  $("check").disabled = answers.some(a=>!a.length);
+}
+
+$("prev").onclick = ()=>{ if(cur>0){cur--;render();} };
+$("next").onclick = ()=>{
+  // jump to the next question that still needs work
+  let n = cur+1;
+  while (n < QUESTIONS.length-1 && status[n] === true) n++;
+  cur = n; render();
+};
+
+function isRight(i){
+  const c = QUESTIONS[i].c, a = answers[i];
+  return a.length === c.length && c.every(x=>a.includes(x));
+}
+
+$("check").onclick = ()=>{
+  status = QUESTIONS.map((_,i)=>isRight(i));
+  const right = status.filter(Boolean).length;
+  const pct = Math.round(right / QUESTIONS.length * 100);
+  const wrongList = status.map((s,i)=>s?null:i+1).filter(Boolean);
+  send({attempt, score:pct, right, wrong:wrongList.join(", "), finished: pct===100});
+
+  $("p2").classList.add("hide"); $("p3").classList.remove("hide");
+  window.scrollTo(0,0);
+  $("score").textContent = pct + "%";
+  if (pct === 100) {
+    $("score").style.color = "var(--good)";
+    $("resultMsg").innerHTML = `🎉 <b>You did it, ${student.name.split(" ")[0]}!</b><br>Now go fix your <b>${student.total}</b> assignment${student.total===1?"":"s"} and resubmit them: <b>New Attempt → same link</b>.<br>Took you ${attempt} ${attempt===1?"try":"tries"}.`;
+    $("retry").classList.add("hide");
+  } else {
+    $("score").style.color = "var(--bad)";
+    $("resultMsg").innerHTML = `You need <b>100%</b> to finish.<br>Fix question${wrongList.length>1?"s":""} <b>${wrongList.join(", ")}</b> (the red ones). Use the How to Submit / How to Re-Submit docs if you're stuck.`;
+    $("retry").classList.remove("hide");
+  }
+};
+
+$("retry").onclick = ()=>{
+  attempt++;
+  // reshuffle the answers only for the wrong ones and clear them
+  QUESTIONS.forEach((q,i)=>{ if(!status[i]){ answers[i]=[]; order[i]=shuffle(q.a.map((_,k)=>k)); } });
+  cur = status.findIndex(s=>!s);
+  $("p3").classList.add("hide"); $("p2").classList.remove("hide");
+  window.scrollTo(0,0);
+  render();
+};
+
+/* ---------- Save to Google Sheet ---------- */
+function send(result){
+  if (!SHEET_URL || SHEET_URL.startsWith("PASTE")) { $("saveMsg").textContent = "(Not connected to a sheet yet.)"; return; }
+  const payload = {
+    version: VERSION, name: student.name, cls: student.cls,
+    c001: student.counts["0.01"], c1: student.counts["1"], c101: student.counts["1.01"],
+    c104: student.counts["1.04"], c2: student.counts["2"], c3: student.counts["3"],
+    total: student.total, readComments: true,
+    attempt: result.attempt, score: result.score, wrong: result.wrong, finished: result.finished,
+    minutes: Math.round((new Date()-startTime)/60000)
+  };
+  $("saveMsg").textContent = "Saving…";
+  fetch(SHEET_URL, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(payload)})
+    .then(()=>{ $("saveMsg").textContent = result.finished ? "✅ Saved! Ms. K can see you finished." : "Saved this try."; })
+    .catch(()=>{ $("saveMsg").textContent = "⚠️ Couldn't save — tell Ms. K."; });
+}
+</script>
+</body>
+</html>
