@@ -174,6 +174,33 @@
         <p>It opens <u>Wednesday at midnight</u>.<br>Take it — it's your last step to 60%+ 🎯</p>
       </div>
       <p id="saveMsg" class="hint"></p>
+      <div id="emailBox" class="hide" style="text-align:left;margin-top:18px;border-top:3px dashed var(--line);padding-top:16px">
+        <h2 style="text-align:center">📧 How do I remember it?</h2>
+        <p class="center" style="margin:0 0 6px">Email your list to <b>yourself</b> + <b>your coach</b> (CC).</p>
+        <label class="f" for="myEmail">Your school email</label>
+        <input id="myEmail" type="text" inputmode="email" placeholder="first.last@thrivepointnevada.com">
+        <label class="f" for="coach">Your coach</label>
+        <select id="coach">
+          <option value="">— choose your coach —</option>
+          <option value="irene.castro@thrivepointnevada.com">Coach Castro</option>
+          <option value="michael.clark@thrivepointnevada.com">Coach Clark</option>
+          <option value="aleta.espada@thrivepointnevada.com">Coach Espada</option>
+          <option value="anjelica.negrete@thrivepointnevada.com">Coach Negrete</option>
+          <option value="ivan.ramirez@thrivepointnevada.com">Coach Ramirez</option>
+          <option value="andrew.scherr@thrivepointnevada.com">Coach Scherr</option>
+          <option value="charles.thorpe@thrivepointnevada.com">Coach Thorpe</option>
+          <option value="meredith.toddre@thrivepointnevada.com">Coach Toddre</option>
+          <option value="amanda.watson@thrivepointnevada.com">Coach Watson</option>
+          <option value="none">I don't know / no coach</option>
+        </select>
+        <label class="f" for="myNotes">My notes ✏️ <span class="hint" style="font-weight:400">(your plan — when will you fix them?)</span></label>
+        <textarea id="myNotes" rows="4" placeholder="Example: Fix Domain and Range on Tuesday, come to session Wednesday, take the final Thursday." style="width:100%;font-size:1.05rem;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:#fffaf4;font-family:inherit"></textarea>
+        <div class="err" id="mailErr"></div>
+        <div class="center" style="margin-top:12px">
+          <button id="gmailBtn" type="button">Open Gmail ✉️</button>
+          <div class="hint" style="margin-top:8px">Then just press <b>Send</b> in Gmail. Not opening? <a id="mailtoLink" href="#">Try this link</a>.</div>
+        </div>
+      </div>
     </div>
   </section>
 </div>
@@ -211,7 +238,7 @@ let cur = 0, attempt = 1;
 const startTime = new Date();
 
 function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
-function titleCase(s){ return s.trim().replace(/\s+/g," ").toLowerCase().replace(/(^|[\s\-'])([a-zà-ÿ])/g,(m,p,c)=>p+c.toUpperCase()); }
+function titleCase(s){ s=s.trim().replace(/\s+/g," "); if(s===s.toUpperCase()) s=s.toLowerCase(); return s.replace(/(^|[\s\-])([a-zà-ÿ])/g,(m,p,c)=>p+c.toUpperCase()); }
 
 /* ---------- Page 1 ---------- */
 const codeInputs = [...document.querySelectorAll("[data-code]")];
@@ -344,6 +371,8 @@ $("check").onclick = ()=>{
     $("resultMsg").innerHTML = `🎉 <b>You did it, ${student.name.split(" ")[0]}!</b><br>Now go fix your <b>${student.total}</b> assignment${student.total===1?"":"s"} and resubmit them: <b>New Attempt → same link</b>.<br>Took you ${attempt} ${attempt===1?"try":"tries"}.`;
     $("retry").classList.add("hide");
     $("examWarn").classList.remove("hide");
+    $("emailBox").classList.remove("hide");
+    if (!$("myEmail").value) $("myEmail").value = student.name.toLowerCase().replace(/[^a-z\s-]/g,"").trim().split(/\s+/).join(".") + "@thrivepointnevada.com";
   } else {
     $("score").style.color = "var(--bad)";
     $("resultMsg").innerHTML = `You need <b>100%</b> to finish.<br>Fix question${wrongList.length>1?"s":""} <b>${wrongList.join(", ")}</b> (the red ones). Use the How to Submit / How to Re-Submit docs if you're stuck.`;
@@ -359,6 +388,58 @@ $("retry").onclick = ()=>{
   $("p3").classList.add("hide"); $("p2").classList.remove("hide");
   window.scrollTo(0,0);
   render();
+};
+
+/* ---------- Email to myself + coach ---------- */
+function buildMail(){
+  const me = $("myEmail").value.trim();
+  const coach = $("coach").value;
+  if (!/^[^@\s]+@thrivepointnevada\.com$/i.test(me)) { $("mailErr").textContent = "Type your SCHOOL email (…@thrivepointnevada.com)."; return null; }
+  if (!coach) { $("mailErr").textContent = "Pick your coach (or \"I don't know\")."; return null; }
+  $("mailErr").textContent = "";
+  const c = student.counts;
+  const subject = `Last week of LP2 – my fix-it list – ${student.name} (${$("cls").selectedOptions[0].text})`;
+  const body =
+`Hi! This is my LP2 fix-it list.
+
+Name: ${student.name}
+Class: ${$("cls").selectedOptions[0].text}
+Goal: PASS with 60%+
+
+MY GRADES TO FIX (assignments & tests only):
+  0.01 (missing): ${c["0.01"]}
+  1 (wrong / can't open): ${c["1"]}
+  1.01 (not my own work): ${c["1.01"]}
+  1.04 (wrong format): ${c["1.04"]}
+  2 (Viewer, not Editor): ${c["2"]}
+  3 (answers only, no work): ${c["3"]}
+  TOTAL TO FIX: ${student.total}
+
+ASSIGNMENT NAMES:
+${student.names || "(none)"}
+
+MY NOTES / PLAN:
+${$("myNotes").value.trim() || "(none)"}
+
+HOW TO RESUBMIT: fix the SAME doc → Canvas → New Attempt → submit the SAME link (Anyone with the link – Editor).
+
+⚠️ FINAL EXAM opens Wednesday at midnight – don't forget to take it!
+
+– ${student.name}`;
+  return {me, cc: coach === "none" ? "" : coach, subject, body};
+}
+$("gmailBtn").onclick = ()=>{
+  const m = buildMail(); if (!m) return;
+  const url = "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(m.me) +
+    (m.cc ? "&cc=" + encodeURIComponent(m.cc) : "") +
+    "&su=" + encodeURIComponent(m.subject) + "&body=" + encodeURIComponent(m.body);
+  window.open(url, "_blank");
+};
+$("mailtoLink").onclick = (e)=>{
+  e.preventDefault();
+  const m = buildMail(); if (!m) return;
+  location.href = "mailto:" + encodeURIComponent(m.me) + "?" + (m.cc ? "cc=" + encodeURIComponent(m.cc) + "&" : "") +
+    "subject=" + encodeURIComponent(m.subject) + "&body=" + encodeURIComponent(m.body);
 };
 
 /* ---------- Save to Google Sheet ---------- */
