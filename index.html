@@ -64,7 +64,9 @@
   .dot.cur{border-color:var(--orange-dk)}
   .dot.ok{background:var(--good);color:#fff;border-color:var(--good)}
   .dot.no{background:var(--bad);color:#fff;border-color:var(--bad)}
-  .big{font-size:3rem;font-weight:900;text-align:center;margin:6px 0}
+  .big{font-size:1.7rem;font-weight:900;text-align:center;margin:4px 0}
+  .must{background:#fdecec;border:3px solid var(--bad);color:var(--bad);border-radius:14px;padding:10px 14px;font-weight:800;text-align:center;margin-bottom:12px}
+  .notdone{background:#fdecec;border:3px solid var(--bad);border-radius:14px;padding:12px;margin:14px 0;font-weight:800;color:var(--bad)}
   .center{text-align:center}
   .wrongnote{background:#fdecec;border-left:6px solid var(--bad);border-radius:10px;padding:8px 12px;margin-bottom:10px;font-weight:700;color:var(--bad)}
   .hide{display:none}
@@ -150,6 +152,7 @@
 
   <!-- ================= PAGE 2 ================= -->
   <section id="p2" class="hide">
+    <div class="must">⚠️ You MUST get <u>100%</u> to finish. Not 99%. Keep fixing until every circle is green!</div>
     <div class="card">
       <div class="row" style="margin-top:0"><span class="qnum" id="qnum"></span><span class="qnum" id="attemptLbl"></span></div>
       <div class="bar"><i id="barFill"></i></div>
@@ -172,20 +175,20 @@
       <div class="big" id="score"></div>
       <p id="resultMsg"></p>
       <button id="retry" class="hide">Fix the red ones 🔁</button>
-      <div id="keepGoing" class="hide" style="background:var(--blue);color:#fff;border-radius:16px;padding:14px 16px;margin-top:16px;box-shadow:0 4px 0 #0f4f8c">
-        <div style="font-size:1.6rem;font-weight:900">🔁 KEEP SUBMITTING!</div>
-        <div style="font-weight:700">Every fixed assignment brings you closer to <span style="color:#FFC24A">60%+</span>. Don't stop until LP2 ends!</div>
-      </div>
-      <div id="examWarn" class="exam hide">
-        <h3>⚠️ Don't forget your FINAL EXAM!</h3>
-        <p>It opens <u>Wednesday at midnight</u>.<br>Take it — it's your last step to 60%+ 🎯</p>
+      <div id="contBox" class="hide">
+        <div class="notdone">🛑 WAIT — you are NOT done yet!<br>Press <u>Continue</u> to send your fix-it list to Ms. K.</div>
+        <button id="contBtn" type="button" style="font-size:1.4rem;padding:16px 34px">Continue ➜</button>
       </div>
       <p id="saveMsg" class="hint"></p>
       <div id="emailBox" class="hide" style="text-align:left;margin-top:18px;border-top:3px dashed var(--line);padding-top:16px">
-        <h2 style="text-align:center">📧 How do I remember it?</h2>
-        <p class="center" style="margin:0 0 6px">Email your list to <b>yourself</b> + CC <b>your coach</b> and <b>Ms. Strigina</b>.</p>
-        <label class="f" for="myEmail">Your school email</label>
+        <h2 style="text-align:center">📧 Last step: send your list to Ms. K</h2>
+        <p class="center" style="margin:0 0 6px">Your fix-it list goes to <b>Ms. Strigina</b>. 📬</p>
+        <label class="f" for="myEmail">Your school email <span class="hint" style="font-weight:400">(so Ms. K knows it's you)</span></label>
         <input id="myEmail" type="text" inputmode="email" placeholder="first.last@thrivepointnevada.com">
+        <label class="f">Do you want to send it to your coach too?</label>
+        <label class="check" style="margin:6px 0"><input type="radio" name="toCoach" value="yes"> Yes, send it to my coach too</label>
+        <label class="check" style="margin:6px 0"><input type="radio" name="toCoach" value="no"> No, just Ms. K</label>
+        <div id="coachWrap" class="hide">
         <label class="f" for="coach">Your coach</label>
         <select id="coach">
           <option value="">— choose your coach —</option>
@@ -200,13 +203,22 @@
           <option value="amanda.watson@thrivepointnevada.com">Coach Watson</option>
           <option value="none">I don't know / no coach</option>
         </select>
+        </div>
         <label class="f" for="myNotes">My notes ✏️ <span class="hint" style="font-weight:400">(your plan — when will you fix them?)</span></label>
         <textarea id="myNotes" rows="4" placeholder="Example: Fix Domain and Range on Tuesday, come to session Wednesday, take the final Thursday." style="width:100%;font-size:1.05rem;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:#fffaf4;font-family:inherit"></textarea>
         <div class="err" id="mailErr"></div>
         <div class="center" style="margin-top:12px">
-          <button id="gmailBtn" type="button">Send it to my school email ✉️</button>
-          <div class="hint" id="mailMsg" style="margin-top:8px">It goes to your <b>school</b> email — check it in a few minutes.</div>
+          <button id="gmailBtn" type="button">Send to Ms. K ✉️</button>
+          <div class="hint" id="mailMsg" style="margin-top:8px"></div>
         </div>
+      </div>
+      <div id="keepGoing" class="hide" style="background:var(--blue);color:#fff;border-radius:16px;padding:14px 16px;margin-top:16px;box-shadow:0 4px 0 #0f4f8c">
+        <div style="font-size:1.6rem;font-weight:900">🔁 KEEP SUBMITTING!</div>
+        <div style="font-weight:700">Every fixed assignment brings you closer to <span style="color:#FFC24A">60%+</span>. Don't stop until LP2 ends!</div>
+      </div>
+      <div id="examWarn" class="exam hide">
+        <h3>⚠️ Don't forget your FINAL EXAM!</h3>
+        <p>It opens <u>Wednesday at midnight</u>.<br>Take it — it's your last step to 60%+ 🎯</p>
       </div>
     </div>
   </section>
@@ -377,9 +389,8 @@ $("check").onclick = ()=>{
     $("score").style.color = "var(--good)";
     $("resultMsg").innerHTML = `🎉 <b>You did it, ${student.name.split(" ")[0]}!</b><br>Now go fix your <b>${student.total}</b> assignment${student.total===1?"":"s"} and resubmit them: <b>New Attempt → same link</b>.<br>Took you ${attempt} ${attempt===1?"try":"tries"}.`;
     $("retry").classList.add("hide");
-    $("examWarn").classList.remove("hide");
-    $("keepGoing").classList.remove("hide");
-    $("emailBox").classList.remove("hide");
+    $("contBox").classList.remove("hide");
+    window.onbeforeunload = (e)=>{ e.preventDefault(); e.returnValue=""; return ""; };
     if (!$("myEmail").value) $("myEmail").value = student.name.toLowerCase().replace(/[^a-z\s-]/g,"").trim().split(/\s+/).join(".") + "@thrivepointnevada.com";
   } else {
     $("score").style.color = "var(--bad)";
@@ -388,6 +399,14 @@ $("check").onclick = ()=>{
   }
 };
 
+$("contBtn").onclick = ()=>{
+  $("contBox").classList.add("hide");
+  $("emailBox").classList.remove("hide");
+  $("emailBox").scrollIntoView({behavior:"smooth", block:"start"});
+};
+document.querySelectorAll('input[name="toCoach"]').forEach(r=>r.onchange=()=>{
+  $("coachWrap").classList.toggle("hide", r.value!=="yes" || !r.checked);
+});
 $("retry").onclick = ()=>{
   attempt++;
   // reshuffle the answers only for the wrong ones and clear them
@@ -401,14 +420,16 @@ $("retry").onclick = ()=>{
 /* ---------- Email to myself + coach ---------- */
 function buildMail(){
   const me = $("myEmail").value.trim();
-  const coach = $("coach").value;
+  const pick = document.querySelector('input[name="toCoach"]:checked');
   if (!/^[^@\s]+@thrivepointnevada\.com$/i.test(me)) { $("mailErr").textContent = "Type your SCHOOL email (…@thrivepointnevada.com)."; return null; }
+  if (!pick) { $("mailErr").textContent = "Answer: send it to your coach too? (Yes or No)"; return null; }
+  const coach = pick.value === "yes" ? $("coach").value : "none";
   if (!coach) { $("mailErr").textContent = "Pick your coach (or \"I don't know\")."; return null; }
   $("mailErr").textContent = "";
   const c = student.counts;
   const subject = `Last week of LP2 – my fix-it list – ${student.name} (${$("cls").selectedOptions[0].text})`;
   const body =
-`Hi! This is my LP2 fix-it list.
+`Hi Ms. K! This is my LP2 fix-it list.
 
 Name: ${student.name}
 Class: ${$("cls").selectedOptions[0].text}
@@ -432,18 +453,20 @@ HOW TO RESUBMIT: fix the SAME doc → Canvas → New Attempt → submit the SAME
 ⚠️ FINAL EXAM opens Wednesday at midnight – don't forget to take it!
 
 – ${student.name}`;
-  const ms = "katya.strigina@thrivepointnevada.com";
-  return {me, cc: coach === "none" ? ms : coach + "," + ms, subject, body};
+  return {me, coach, subject, body};
 }
 $("gmailBtn").onclick = ()=>{
   const m = buildMail(); if (!m) return;
   if (!SHEET_URL || SHEET_URL.startsWith("PASTE")) { $("mailErr").textContent = "Not connected yet — tell Ms. K."; return; }
   $("gmailBtn").disabled = true; $("gmailBtn").textContent = "Sending…";
   fetch(SHEET_URL, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"},
-    body: JSON.stringify({type:"email", to:m.me, coach:$("coach").value, subject:m.subject, body:m.body,
+    body: JSON.stringify({type:"email", to:m.me, coach:m.coach, subject:m.subject, body:m.body,
       name:student.name, cls:student.cls, notes:$("myNotes").value.trim()})})
     .then(()=>{ $("gmailBtn").textContent = "✅ Sent!";
-      $("mailMsg").innerHTML = `Sent to <b>${m.me}</b>${$("coach").value!=="none" ? " + your coach" : ""} + Ms. Strigina. Check your school email!`; })
+      window.onbeforeunload = null;
+      $("mailMsg").innerHTML = `Sent to <b>Ms. Strigina</b>${m.coach!=="none" ? " + your coach" : ""}. You're done! 🎉`;
+      $("keepGoing").classList.remove("hide"); $("examWarn").classList.remove("hide");
+      $("keepGoing").scrollIntoView({behavior:"smooth", block:"center"}); })
     .catch(()=>{ $("gmailBtn").disabled=false; $("gmailBtn").textContent="Try again ✉️"; $("mailErr").textContent="Couldn't send — check your internet and try again."; });
 };
 
